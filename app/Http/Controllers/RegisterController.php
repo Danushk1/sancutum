@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Validator;
+use Illuminate\Support\Facades\Validator;
    
 
 class RegisterController extends Controller
@@ -15,14 +15,21 @@ class RegisterController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'c_password' => 'required|same:password',
         ]);
    
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return response()->json([
+
+                'status' => false,
+                'message' =>'validation error',
+                'errors' => $validator->error()
+            ],401) ;  
         }
+
+        
    
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);

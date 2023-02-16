@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Product;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ProductResource;
-
+use Illuminate\Support\Facades\Cache;
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
-    
-        return $this->sendResponse(ProductResource::collection($products), 'Products retrieved successfully.');
+        $value = Cache::rememberForever('users', function () {
+            return Product::table('users')->get();
+        });
     }
     /**
      * Store a newly created resource in storage.
