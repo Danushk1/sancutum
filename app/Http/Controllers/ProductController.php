@@ -27,8 +27,13 @@ class ProductController extends Controller
         $input = $request->all();
    
         $validator = Validator::make($input, [
-            'name' => 'required',
-            'detail' => 'required'
+            
+            'author_id' => 'required',
+            'parent_id' => 'required',
+            'title' => 'required',
+            'image' => 'required',
+            'summery' => 'required',
+            'content' => 'required',
         ]);
    
         if($validator->fails()){
@@ -64,25 +69,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
-    {
-        $input = $request->all();
    
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'detail' => 'required'
-        ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
-        }
-   
-        $product->name = $input['name'];
-        $product->detail = $input['detail'];
-        $product->save();
-   
-        return $this->sendResponse(new ProductResource($product), 'Product updated successfully.');
-    }
    
     /**
      * Remove the specified resource from storage.
@@ -90,10 +77,5 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
-    {
-        $product->delete();
    
-        return $this->sendResponse([], 'Product deleted successfully.');
-    }
 }
